@@ -1,0 +1,29 @@
+{
+  "name": "cd",
+  "version": "1.0.0",
+  "description": "This sample project is managing gateways - master devices that control multiple peripheral",
+  "main": "app.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "server": "nodemon app.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^6.2.0",
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.14",
+    "nodemon": "^2.0.7"
+  },
+  "author": "Stephen Oloto",
+  "license": "ISC",
+  "devDependencies": {
+    "@angular/cli": "^13.2.5"
+  }
+}

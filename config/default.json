@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://test:test@todo-htlrq.mongodb.net/manage-gateways?retryWrites=true&w=majority",
+    "jwtSecret": "sl_myJwtSecret"
+}
