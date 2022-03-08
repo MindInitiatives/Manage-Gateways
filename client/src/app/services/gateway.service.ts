@@ -14,19 +14,20 @@ export class GatewayService extends BaseUrl {
     super();
   }
 
-  createGateway(data: IGateway): Observable<IGateway> {
-    const headers = new HttpHeaders({
+  createGateway(data: IGateway): Observable<any> {
+    let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
     console.log(headers);
     return this.http
-      .post<IGateway>(this.BASE_URL, data, {
+      .post<any>(this.BASE_URL, data, {
         headers,
       })
       .pipe(
         map((response) => {
           return response;
-        })
+        }),
+        catchError(async (error) => console.log(error))
       );
   }
 

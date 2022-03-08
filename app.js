@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 const config = require('config')
@@ -8,6 +9,9 @@ const app = express();
 
 //vBodyParser Middleware
 app.use(express.json());
+
+// Handling cors
+app.use(cors());
 
 // DB Config
 const db = config.get('mongoURI');

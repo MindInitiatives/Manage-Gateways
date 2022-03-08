@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
         }));
 });
 
-// @router GET api/gateways/:id
+// @router GET api/gateways?id
 // @desc   Get a gateway data
 // @access Private
 router.get('/gateway', (req, res) => {
@@ -65,7 +65,14 @@ router.post('/', (req, res) => {
             }
             else {
             newGateway.save()
-                .then(item => res.json(item))
+                .then(item => res.json(
+                    {
+                        success: true,
+                        data: item,
+                        statusMessage: "Gateway Created Successfully",
+                        statusCode: res.statusCode
+                    }
+                ))
                 .catch(err => res.status(404).json({
                     success: false,
                     statusMessage: err,
@@ -75,7 +82,7 @@ router.post('/', (req, res) => {
         })
         .catch(err => res.status(500).json({
             success: false,
-            statusMessage: err.message,
+            statusMessage: err.statusMessage,
             statusCode: res.statusCode
         }));
 
@@ -136,7 +143,8 @@ router.delete('/gateway', (req, res) => {
     Gateway.findById(req.query.id)
         .then(item => item.remove().then(() => res.json({
             success: true,
-            statusMessage: 'Gateway deleted successfully'
+            statusMessage: 'Gateway deleted successfully',
+            statusCode: res.statusCode
         })))
         .catch(err => res.status(404).json({
             success: false,

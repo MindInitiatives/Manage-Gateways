@@ -17,53 +17,51 @@
             <div class="row">
               <div class="col-xl-6 offset-xl-3">
                 <div class="text-box mt-5 mb-5">
-                  <p class="mb-4">Fill out the form below to sign up for the service. Already signed up? Then just <a
-                      class="blue" href="log-in.html">Log In</a></p>
+                  <p class="mb-4">Need to view Available Gateways? Then just <a
+                      class="blue" [routerLink]="['/all-gateways']">Click Here</a></p>
 
                   <!-- Sign Up Form -->
-                  <form [formGroup]="form" (ngSubmit)="submitForm(form.value)" >
+                  <form [formGroup]="form">
                     <div class="mb-4 form-floating">
-                      <input formControlName="gatewayName" name="name" type="text" class="form-control"
-                        id="floatingInput2" placeholder="">
+                      <input formControlName="gateway_name" name="name" type="text" class="form-control"
+                        id="floatingInput1" placeholder="" required>
                       <label for="floatingInput">Gateway name</label>
                     </div>
                     <div class="mb-4 form-floating">
-                      <input formControlName="ipv4Address" name="address" type="text" class="form-control" id="floatingInput"
-                        placeholder="">
+                      <input formControlName="IPV4_address" name="address" type="text" class="form-control" id="floatingInput2"
+                        placeholder="" required>
                       <label for="floatingInput">IPV4 Address</label>
                     </div>
 
                     <div class="peripheral-section">
                       <p class="mb-4">Peripherals</p>
-                      <div class="peripheral-item" formArrayName="peripherals">
-                        <div *ngFor="let peripheralItem of form.controls['peripherals']?.value; let i = index">
-                          <ng-container [formGroupName]="i">
+                      <ng-container formArrayName="peripheral_devices">
+                        <div *ngFor="let peripheralItem of peripheral_devices.controls; let i = index" [formGroupName]="i">
                             <div class="mb-4 form-floating">
-                              <input formControlName="vendor" name="" type="text" class="form-control"
-                                id="floatingPassword" placeholder="">
-                              <label for="floatingPassword">Vendor</label>
+                              <input formControlName="vendor" name="vendor" type="text" class="form-control"
+                                [id]="'vendor'+i" placeholder="" required>
+                              <label [for]="'vendor'+i">Vendor</label>
                             </div>
                             <div class="mb-4 form-floating">
                               <select formControlName="status" name="status" (change)="selectStatus($event)"
-                                class="form-control">
+                                class="form-control" required>
                                 <option [ngValue]="null">Select Option</option>
                                 <option *ngFor="let status of deviceStatus" value="{{status}}">{{status}}</option>
                               </select>
                               <label for="floatingPassword">Status</label>
                             </div>
-                          </ng-container>
 
-                          <button class="btn btn-solid-sm mb-4" (click)="remove(i)"> Remove</button>
+                          <button class="btn btn-solid-sm mb-4" (click)="remove(i)" [disabled]="loading"> Remove</button>
                         </div>
                         <div class="form-button text-end">
-                          <button class="btn btn-outline-sm" (click)="add()">
+                          <button class="btn btn-outline-sm" [disabled]="loading" (click)="add()">
                             <span class="fa fa-plus"></span> Add New Device
                           </button>
                         </div>
-                      </div>
+                      </ng-container>
                     </div>
 
-                    <button type="submit" class="form-control-submit-button my-5">Submit</button>
+                    <button  (click)="submitForm(form)" type="submit" class="form-control-submit-button my-5" [disabled]="loading">Submit  <i *ngIf="loading" class="fa fa-spinner fa-spin"></i></button>
                   </form>
                   <!-- end of sign up form -->
 

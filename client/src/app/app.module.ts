@@ -8,8 +8,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './components/home/home.component';
 import { CreateGatewayComponent } from './components/create-gateway/create-gateway.component';
-import { AllGatewaysComponent } from './components/all-gateways/all-gateways.component';
+import { AllGatewaysComponent, ConfirmationModalComponent } from './components/all-gateways/all-gateways.component';
 import { GatewayDetailComponent } from './components/gateway-detail/gateway-detail.component';
+import { MaterialModule } from './modules/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,7 @@ import { GatewayDetailComponent } from './components/gateway-detail/gateway-deta
     HomeComponent,
     CreateGatewayComponent,
     AllGatewaysComponent,
+    ConfirmationModalComponent,
     GatewayDetailComponent
   ],
   imports: [
@@ -26,6 +29,8 @@ import { GatewayDetailComponent } from './components/gateway-detail/gateway-deta
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MaterialModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
