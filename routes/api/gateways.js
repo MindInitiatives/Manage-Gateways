@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../../middleware/auth');
-
-const crypto = require('crypto');
 
 // Item Model
 const Gateway = require('../../models/Gateway');
@@ -157,17 +154,6 @@ router.delete('/gateway', (req, res) => {
 // @desc   Delete a Gateway Device
 // @access Private
 router.delete('/gateway/device', (req, res) => {
-//     Gateway.findById(req.query.id)
-//         .then(item => item.remove().then(() => res.json({
-//             success: true,
-//             statusMessage: 'Gateway deleted successfully'
-//         })))
-//         .catch(err => res.status(404).json({
-//             success: false,
-//             statusMessage: err.message,
-//             statusCode: res.statusCode
-//         }));
-// });
 
 Gateway.updateOne(
     req.query.id, 

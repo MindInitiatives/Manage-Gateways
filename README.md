@@ -1,10 +1,44 @@
+<div align="center">
+<h2>Manage Gateways</h2>
+<img src="https://img.shields.io/badge/build-passing-green.svg">
+<img src="https://img.shields.io/badge/license-MIT-green.svg">
+</div>
+
+## Introduction
+
+A Fullstack Application to master devices that control multiple peripheral devices, Frontend-angular, Backend-node.js/express/, Database-mongoDB.
+
 # Client
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.5.
 
+## Technologies
+
+- [Typescript]
+- [Angular]
+- [MongoDB]
+- [NodeJS]
+
+## Tools
+- [Mongoose]
+- [Express]
+
+## Installation
+
+- Install dependencies
+
+```
+$ npm install
+```
+- Replace connection strings with yours
+
+```
+$ can be found in `default.json`
+```
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm run serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
