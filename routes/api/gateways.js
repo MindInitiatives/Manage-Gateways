@@ -26,9 +26,9 @@ router.get('/', (req, res) => {
 // @router GET api/gateways/:id
 // @desc   Get a gateway data
 // @access Private
-router.get('/:id', (req, res) => {
-    Gateway.findById(req.params.id)
-        .then(gateway => res.json(gateway))
+router.get('/gateway', (req, res) => {
+    Gateway.findById(req.query.id)
+        .then(gateway => {console.log(gateway);res.json(gateway)})
         .catch(err => res.status(404).json({
             success: false,
             statusMessage: err.message,
@@ -41,15 +41,10 @@ router.get('/:id', (req, res) => {
 // @access Private
 router.post('/', (req, res) => {
 
-    const newGateway = new Gateway({
-        serialNumber: "GTW-" + crypto.randomBytes(6).toString("hex"),
-        gateway_name: req.body.gateway_name,
-        IPV4_address: req.body.IPV4_address,
-        peripheral_devices: req.body.peripheral_devices
-    });
+    const newGateway = new Gateway(req.body);
 
     //Simple validation
-    if (!newGateway.gateway_name || !newGateway.IPV4_address || !newGateway.peripheral_devices.vendor) {
+    if (!req.body.gateway_name || !req.body.IPV4_address) {
         return res.status(400).json({
             statusMessage: 'Please fill in required fields '
         });
@@ -57,43 +52,42 @@ router.post('/', (req, res) => {
 
     //Check for existing user
     Gateway.findOne({
-            gateway_name
+            gateway_name: req.body.gateway_name
         })
         .then(gateway => {
-            if (gateway) return res.status(400).json({
+            if (gateway) return res.status(404).json({
                 statusMessage: 'Gateway already exists'
             });
+            if(newGateway.peripheral_devices.length > 10) {
+                return res.status(400).json({
+                    statusMessage: 'no more that 10 peripheral devices are allowed for a gateway.'
+                });
+            }
+            else {
             newGateway.save()
                 .then(item => res.json(item))
                 .catch(err => res.status(404).json({
                     success: false,
-                    statusMessage: err.message,
+                    statusMessage: err,
                     statusCode: res.statusCode
                 }));
+            }
         })
+        .catch(err => res.status(500).json({
+            success: false,
+            statusMessage: err.message,
+            statusCode: res.statusCode
+        }));
 
 });
 
-// @router PUT api/gateways/:id
+// @router PUT api/gateways/gateway?id
 // @desc   Update a gateway
 // @access Private
-router.put('/:id', (req, res) => {
-
-    const newGateway = {
-        gateway_name: req.body.gateway_name,
-        IPV4_address: req.body.IPV4_address,
-        vendor: req.body.peripheral_devices.vendor
-    };
-
-    //Simple validation
-    // if (!newGateway.gateway_name || !newGateway.IPV4_address || !newGateway.vendor) {
-    //     return res.status(400).json({
-    //         statusMessage: 'Please fill in required fields '
-    //     });
-    // }
+router.put('/gateway', (req, res) => {
 
     Gateway.findByIdAndUpdate(
-        req.params.id, 
+        req.query.id, 
         req.body,
         { useFindAndModify: false, upsert: true })
         .then(data => {
@@ -111,11 +105,35 @@ router.put('/:id', (req, res) => {
 
 });
 
-// @router DELETE api/gateways
+// @router PUT api/gateways/:id
+// @desc   Update a gateway peripheral status
+// @access Private
+router.put('/:id', (req, res) => {
+    const { status } = req.body;
+    Gateway.findOneAndUpdate(
+        req.params.id, 
+        status,
+        { new:true })
+        .then(data => {
+            res.json({
+                success: true,
+                statusMessage: "status updated successfully.",
+                statusCode: res.statusCode
+            });
+        })
+        .catch(err => res.status(404).json({
+            success: false,
+            statusMessage: err.message,
+            statusCode: res.statusCode
+        }));
+
+});
+
+// @router DELETE api/gateways/gateway?id
 // @desc   Delete a Gateway
 // @access Private
-router.delete('/:id', (req, res) => {
-    Gateway.findById(req.params.id)
+router.delete('/gateway', (req, res) => {
+    Gateway.findById(req.query.id)
         .then(item => item.remove().then(() => res.json({
             success: true,
             statusMessage: 'Gateway deleted successfully'
@@ -125,6 +143,47 @@ router.delete('/:id', (req, res) => {
             statusMessage: err.message,
             statusCode: res.statusCode
         }));
+});
+
+// @router DELETE api/gateways
+// @desc   Delete a Gateway Device
+// @access Private
+router.delete('/gateway/device', (req, res) => {
+//     Gateway.findById(req.query.id)
+//         .then(item => item.remove().then(() => res.json({
+//             success: true,
+//             statusMessage: 'Gateway deleted successfully'
+//         })))
+//         .catch(err => res.status(404).json({
+//             success: false,
+//             statusMessage: err.message,
+//             statusCode: res.statusCode
+//         }));
+// });
+
+Gateway.updateOne(
+    req.query.id, 
+    { $pull: { peripheral_devices: { uid: req.body.uid } } },
+    false, // Upsert
+    true, // Multi
+    (e)=>{
+        console.log(e)
+    }
+)
+.then(item => {
+    if (!item) return res.status(404).json({
+        statusMessage: `Device with id ${req.body.uid} does not exist`
+    });
+    else res.json({
+    success: true,
+    statusMessage: 'Device deleted successfully'
+})}
+)
+.catch(err => res.status(500).json({
+    success: false,
+    statusMessage: err.message,
+    statusCode: res.statusCode
+}))
 });
 
 module.exports = router;
