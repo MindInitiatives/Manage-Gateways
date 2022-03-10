@@ -5,7 +5,7 @@ const crypto = require('crypto');
 
 // Create Schema
 
-const GatewaySchema = new Schema({
+var GatewaySchema = new Schema({
     serialNumber: {
         type: String,
         required: true,
@@ -27,7 +27,7 @@ const GatewaySchema = new Schema({
             value: {
                 type: 'Buffer'
             },
-            default: () => MUUID.v1(),
+            default: () => MUUID.v1().toString(),
             unique: true
         },
         vendor: {
@@ -45,4 +45,12 @@ const GatewaySchema = new Schema({
 
 });
 
-module.exports = Gateway = mongoose.model('gateway', GatewaySchema);
+GatewaySchema.method("toJSON", function() {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+  });
+
+const Gateway = mongoose.model('gateway', GatewaySchema);
+
+module.exports = Gateway

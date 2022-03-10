@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const ObjectID = require('mongodb').ObjectID;
 
 // Item Model
 const Gateway = require('../../models/Gateway');
@@ -109,16 +110,15 @@ router.put('/gateway', (req, res) => {
 
 });
 
-// @router PUT api/gateways/:id
+// @router PUT api/gateways/gateway/device?status
 // @desc   Update a gateway peripheral status
 // @access Private
-router.put('/:id', (req, res) => {
-    const { status } = req.body;
-    Gateway.findOneAndUpdate(
-        req.params.id, 
-        status,
-        { new:true })
+router.put('/gateway/device', async (req, res) => {
+    await Gateway.updateOne(
+        {"id": req.query.id, "peripheral_devices.uid": req.query.uid }, 
+        { $set: { "peripheral_devices.$.status": req.body.status } })
         .then(data => {
+            console.log(data)
             res.json({
                 success: true,
                 statusMessage: "status updated successfully.",
@@ -131,6 +131,23 @@ router.put('/:id', (req, res) => {
             statusCode: res.statusCode
         }));
 
+});
+
+// @router DELETE api/gateways
+// @desc   Delete all Gateways
+// @access Private
+router.delete('/', (req, res) => {
+    Gateway.deleteMany({})
+        .then(item => res.json({
+            success: true,
+            statusMessage: `All Gateways deleted successfully`,
+            statusCode: res.statusCode
+        }))
+        .catch(err => res.status(500).json({
+            success: false,
+            statusMessage: err.message,
+            statusCode: res.statusCode
+        }));
 });
 
 // @router DELETE api/gateways/gateway?id
@@ -150,34 +167,44 @@ router.delete('/gateway', (req, res) => {
         }));
 });
 
-// @router DELETE api/gateways
+// @router DELETE api/gateways/gateway/device?id
 // @desc   Delete a Gateway Device
 // @access Private
-router.delete('/gateway/device', (req, res) => {
+router.delete('/gateway/device', async (req, res) => {
 
-Gateway.updateOne(
-    req.query.id, 
-    { $pull: { peripheral_devices: { uid: req.body.uid } } },
-    false, // Upsert
-    true, // Multi
-    (e)=>{
-        console.log(e)
-    }
-)
+await Gateway.updateOne( 
+    { _id: req.query.id }, 
+    { $pull: { peripheral_devices: { uid: req.query.uid } } }
+    // ,
+    // { new: true }
+    )
 .then(item => {
+    console.log(item)
     if (!item) return res.status(404).json({
-        statusMessage: `Device with id ${req.body.uid} does not exist`
-    });
+        statusMessage: `Device with id ${req.query.uid} does not exist`
+    })
+    else if (item.nModified > 0) {
+        res.json({
+            success: true,
+            statusMessage: 'Device deleted successfully',
+            statusCode: res.statusCode
+        })
+    }
     else res.json({
-    success: true,
-    statusMessage: 'Device deleted successfully'
+    success: false,
+    statusMessage: 'An Error Occured.',
+    statusCode: res.statusCode
 })}
 )
-.catch(err => res.status(500).json({
+.catch(err => 
+    { 
+    console.log(err)
+    res.status(500).json({
     success: false,
     statusMessage: err.message,
     statusCode: res.statusCode
-}))
+})
+})
 });
 
 module.exports = router;

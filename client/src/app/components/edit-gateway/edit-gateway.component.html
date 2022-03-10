@@ -1,0 +1,74 @@
+        <!-- Header -->
+        <header class="ex-header">
+            <div class="container">
+              <div class="row">
+                <div class="col-xl-10 offset-xl-1">
+                  <h1 class="text-center">Edit Gateway</h1>
+                </div> <!-- end of col -->
+              </div> <!-- end of row -->
+            </div> <!-- end of container -->
+          </header> <!-- end of ex-header -->
+          <!-- end of header -->
+  
+  
+          <!-- Basic -->
+          <div class="ex-form-1 pt-5 pb-5">
+            <div class="container">
+              <div class="row">
+                <div class="col-xl-6 offset-xl-3">
+                  <div class="text-box mt-5 mb-5">
+                    <p class="mb-4">Finished Editing? Click Here to <a
+                        class="blue" [routerLink]="['/all-gateways']">go back</a></p>
+  
+                    <!-- Sign Up Form -->
+                    <form [formGroup]="form">
+                      <div class="mb-4 form-floating">
+                        <input formControlName="gateway_name" name="name" type="text" class="form-control"
+                          id="floatingInput1" placeholder="" required>
+                        <label for="floatingInput">Gateway name</label>
+                      </div>
+                      <div class="mb-4 form-floating">
+                        <input formControlName="IPV4_address" name="address" type="text" class="form-control" id="floatingInput2"
+                          placeholder="" required>
+                        <label for="floatingInput">IPV4 Address</label>
+                      </div>
+  
+                      <div class="peripheral-section">
+                        <p class="mb-4">Peripherals</p>
+                        <ng-container formArrayName="peripheral_devices">
+                          <div *ngFor="let peripheralItem of peripheral_devices.controls; let i = index" [formGroupName]="i">
+                              <div class="mb-4 form-floating">
+                                <input formControlName="vendor" name="vendor" type="text" class="form-control"
+                                  [id]="'vendor'+i" placeholder="" required>
+                                <label [for]="'vendor'+i">Vendor</label>
+                              </div>
+                              <div class="mb-4 form-floating">
+                                <select formControlName="status" name="status" (change)="selectStatus($event)"
+                                  class="form-control" required>
+                                  <option [ngValue]="null">Select Option</option>
+                                  <option *ngFor="let status of deviceStatus" value="{{status}}">{{status}}</option>
+                                </select>
+                                <label for="floatingPassword">Status</label>
+                              </div>
+  
+                            <button class="btn btn-solid-sm mb-4" (click)="remove(i, peripheralItem)" [disabled]="loading"> Remove</button>
+                          </div>
+                          <div class="form-button text-end">
+                            <button class="btn btn-outline-sm" [disabled]="loading" (click)="add()">
+                              <span class="fa fa-plus"></span> Add New Device
+                            </button>
+                          </div>
+                        </ng-container>
+                      </div>
+  
+                      <button  (click)="submitForm(form)" type="submit" class="form-control-submit-button my-5" [disabled]="loading">Submit  <i *ngIf="loading" class="fa fa-spinner fa-spin"></i></button>
+                    </form>
+                    <!-- end of sign up form -->
+  
+                  </div> <!-- end of text-box -->
+                </div> <!-- end of col -->
+              </div> <!-- end of row -->
+            </div> <!-- end of container -->
+          </div> <!-- end of ex-basic-1 -->
+          <!-- end of basic -->
+  

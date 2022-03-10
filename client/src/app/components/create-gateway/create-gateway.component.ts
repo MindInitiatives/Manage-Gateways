@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { GatewayService } from 'src/app/services/gateway.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class CreateGatewayComponent implements OnInit {
     return this.form.get('peripheral_devices') as FormArray;
   }
 
-  constructor(private fb: FormBuilder, private gatewayService: GatewayService) {
+  constructor(private fb: FormBuilder, private gatewayService: GatewayService, private _snackBar: MatSnackBar) {
 
     this.form = this.fb.group({
       gateway_name: ['', [Validators.required]],
@@ -49,6 +50,12 @@ export class CreateGatewayComponent implements OnInit {
     }
   }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 1000 
+      });
+  }
+
   submitForm(f: any) {
     console.log(f)
     this.loading = true;
@@ -58,14 +65,10 @@ export class CreateGatewayComponent implements OnInit {
         console.log(res)
         if (res.statusCode == 200) {
           this.loading = false;
+          this.openSnackBar(res.statusMessage, "close")
           f.reset();
           this.clearFormArray(this.peripheral_devices)
         }
-      },
-      (err) => {
-        this.loading = false;
-        console.log(err);
-        return false;
       })
     }
     else {

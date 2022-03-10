@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { IAllGateways } from 'src/app/models/gatewayModel';
 import { GatewayService } from 'src/app/services/gateway.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 export interface DialogData {
   id: string;
   name: string;
@@ -29,8 +30,9 @@ export class AllGatewaysComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   public gateways: any = [];
+  loading : boolean = false;
   
-  constructor(private gatewayService: GatewayService, private router: Router, public dialog: MatDialog) {
+  constructor(private gatewayService: GatewayService, private router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar) {
 
    }
 
@@ -44,8 +46,10 @@ export class AllGatewaysComponent implements OnInit, AfterViewInit {
   }
 
   public getAllGateways() {
+    this.loading = true;
     this.gatewayService.getAllGateways().subscribe((res) => {
       console.log(res)
+      this.loading = false;
       this.gateways = res
       this.dataSource.data = this.gateways as IAllGateways[];
     })
@@ -59,6 +63,9 @@ export class AllGatewaysComponent implements OnInit, AfterViewInit {
   }
 
   public redirectToUpdate = (id: string) => {
+    this.router.navigate(['/edit-gateway'], {
+      queryParams: {id :id },
+    });
     
   }
   public redirectToDelete = (id: any) => {
@@ -67,10 +74,16 @@ export class AllGatewaysComponent implements OnInit, AfterViewInit {
         const index = this.dataSource.data.indexOf(id);
         this.dataSource.data.splice(index, 1);
         this.dataSource._updateChangeSubscription(); // <-- Refresh the datasource
+        this.openSnackBar(res.statusMessage, "close")
       }
     })
   }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 1000 
+      });
+  }
 
   openDialog(data: any): void {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {

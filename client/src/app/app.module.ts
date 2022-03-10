@@ -12,6 +12,7 @@ import { AllGatewaysComponent, ConfirmationModalComponent } from './components/a
 import { GatewayDetailComponent } from './components/gateway-detail/gateway-detail.component';
 import { MaterialModule } from './modules/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EditGatewayComponent } from './components/edit-gateway/edit-gateway.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CreateGatewayComponent,
     AllGatewaysComponent,
     ConfirmationModalComponent,
-    GatewayDetailComponent
+    GatewayDetailComponent,
+    EditGatewayComponent,
   ],
   imports: [
     BrowserModule,

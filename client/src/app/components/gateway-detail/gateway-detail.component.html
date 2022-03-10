@@ -1,7 +1,12 @@
+<ng-container *ngIf="gatewayData" >
        <!-- Header -->
        <header class="ex-header">
         <div class="container">
             <div class="row">
+                <span role="button" (click)="goBack()" class="fa-stack me-3">
+                    <span class="fas fa-circle fa-stack-2x"></span>
+                    <span class="fa-stack-1x text-white fs-5 fw-bold"><</span>
+                </span>
                 <div class="col-xl-10 offset-xl-1">
                     <h1>Gateway "{{gatewayData.gateway_name}}" Detail</h1>
                 </div> <!-- end of col -->
@@ -27,7 +32,7 @@
        <div class="ex-basic-1 pt-3 pb-5">
         <div class="container">
             <div class="row">
-                <div class="col-xl-10 offset-xl-1">
+                <div class="col-xl-11 offset-xl-1">
                     <div class="text-box">
                         <p>Gateway</p>
                         <h3>{{gatewayData.gateway_name}}</h3>
@@ -42,7 +47,7 @@
        <div class="ex-basic-1 pt-3 pb-5">
         <div class="container">
             <div class="row">
-                <div class="col-xl-10 offset-xl-1">
+                <div class="col-xl-11 offset-xl-1">
                     <div class="text-box">
                         <p>IP Address</p>
                         <h3>{{gatewayData.IPV4_address}}</h3>
@@ -57,7 +62,7 @@
        <div class="ex-basic-1 pt-3 pb-5">
         <div class="container">
             <div class="row">
-                <div class="col-xl-10 offset-xl-1">
+                <div class="col-xl-11 offset-xl-1">
                     <div class="text-box">
                         <p>Serial Number</p>
                         <h3>{{gatewayData.serialNumber}}</h3>
@@ -73,7 +78,7 @@
     <div class="ex-basic-1 pt-3">
         <div class="container">
             <div class="row">
-                <div class="col-xl-10 offset-xl-1">
+                <div class="col-xl-11 offset-xl-1">
                     <div class="text-box">
                         <h3>Devices</h3>
                     </div> <!-- end of text-box -->                    
@@ -88,7 +93,7 @@
     <div class="ex-cards-1 pt-3 pb-3">
         <div class="container">
             <div class="row">
-                <div class="col-xl-10 offset-xl-1">
+                <div class="col-xl-11 offset-xl-1">
                     <div class="row">
                         <div class="col-sm-4" *ngFor="let device of gatewayData.peripheral_devices; let i = index">
                             <!-- Card -->
@@ -104,9 +109,14 @@
                                             <p><span>UID : </span>{{device.uid}}</p>
                                             <p><span>Status : </span>{{device.status}}</p>
                                             <p><span>Creation Date : </span>{{device.date_created | date :'longDate'}}</p>
-        
                                         </div>
                                     </li>
+                                    <div class="card-rm">
+                                    <a role="button" (click)="remove(device)" class="fa-stack me-3">
+                                        <span class="fas fa-circle fa-stack-2x"></span>
+                                        <span class="fa-stack-1x">-</span>
+                                    </a>
+                                    </div>
                                 </ul>
                             </div> <!-- end of card -->
                             <!-- end of card -->
@@ -118,3 +128,4 @@
         </div> <!-- end of container -->   
     </div> <!-- end of ex-cards-1 -->
     <!-- end of cards -->
+</ng-container>

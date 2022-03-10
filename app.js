@@ -29,15 +29,14 @@ mongoose
 //Use Routes
 app.use('/api/gateways', require('./routes/api/gateways'));
 
-// Serve static assets if in production
-if (process.env.NODE_ENV == 'production') {
-    //Set static folder
-    app.use(express.static('client/build'));
+//Index Route
+app.get('/', (req, res) => {
+    res.send('Invalid Endpoint');
+});
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    });
-}
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 
 const port = process.env.PORT || 5000;

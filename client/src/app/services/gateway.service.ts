@@ -92,7 +92,7 @@ export class GatewayService extends BaseUrl {
     });
     console.log(headers);
     return this.http.delete<any>(
-      `${this.BASE_URL}/gateway?gatewayId=${id}&deviceId=${deviceId}`,
+      `${this.BASE_URL}/gateway/device?id=${id}&uid=${deviceId}`,
       { headers }
     );
   }
