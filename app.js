@@ -5,17 +5,6 @@ const path = require('path');
 const config = require('config')
 
 
-const app = express();
-
-//vBodyParser Middleware
-app.use(express.json());
-
-// Handling cors
-app.use(cors());
-
-//Set Static Folder
-app.use(express.static(path.join(__dirname, 'public')));
-
 // DB Config
 const db = config.get('mongoURI');
 
@@ -29,6 +18,20 @@ mongoose
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.log(err));
 
+const app = express();
+
+//Port Number
+const port = process.env.PORT || 8080;
+
+// Handling cors
+app.use(cors());
+
+//Set Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+//vBodyParser Middleware
+app.use(express.json());
+
 //Use Routes
 app.use('/api/gateways', require('./routes/api/gateways'));
 
@@ -40,8 +43,5 @@ app.get('/', (req, res) => {
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
-
-
-const port = process.env.PORT || 8080;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
