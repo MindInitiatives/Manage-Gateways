@@ -13,6 +13,9 @@ app.use(express.json());
 // Handling cors
 app.use(cors());
 
+//Set Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 // DB Config
 const db = config.get('mongoURI');
 
@@ -41,4 +44,4 @@ app.get('*', (req, res) => {
 
 const port = process.env.PORT || 8080;
 
-app.listen(port, () => console.log(`Server started on port ${8080}`));
+app.listen(port, () => console.log(`Server started on port ${port}`));
