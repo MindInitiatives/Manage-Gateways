@@ -20,7 +20,10 @@ export class GatewayService extends BaseUrl {
     });
     console.log(headers);
     return this.http
-      .post<any>(this.BASE_URL, data, {
+      .post<any>(
+        // this.BASE_URL
+        '/'
+        , data, {
         headers,
       })
       .pipe(
@@ -33,7 +36,8 @@ export class GatewayService extends BaseUrl {
 
   getAllGateways() {
     return this.http.get(
-      this.BASE_URL,
+      // this.BASE_URL
+      '/',
 
       {
         headers: new HttpHeaders({
@@ -45,7 +49,8 @@ export class GatewayService extends BaseUrl {
 
   getGatewayById(id: number) {
     return this.http.get(
-      this.BASE_URL + '/gateway?id=' + id,
+      // this.BASE_URL + 
+      '/gateway?id=' + id,
 
       {
         headers: new HttpHeaders({
@@ -61,7 +66,8 @@ export class GatewayService extends BaseUrl {
     });
     return this.http
       .put<any>(
-        `${this.BASE_URL}/gateway?id=${id}`,
+        // this.BASE_URL +
+        '/gateway?id=' + id,
         gatewayData,
         { headers }
       )
@@ -81,7 +87,8 @@ export class GatewayService extends BaseUrl {
     });
     console.log(headers);
     return this.http.delete<any>(
-      `${this.BASE_URL}/gateway?id=${id}`,
+      // this.BASE_URL +
+      '/gateway?id=' +id,
       { headers }
     );
   }
@@ -92,7 +99,8 @@ export class GatewayService extends BaseUrl {
     });
     console.log(headers);
     return this.http.delete<any>(
-      `${this.BASE_URL}/gateway/device?id=${id}&uid=${deviceId}`,
+      // this.BASE_URL +
+      '/gateway/device?id='+id +'&uid=' +deviceId,
       { headers }
     );
   }
